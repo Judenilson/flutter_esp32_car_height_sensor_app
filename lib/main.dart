@@ -16,9 +16,14 @@ class MyApp extends StatelessWidget {
       title: 'Sensores de Altura',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        brightness: Brightness.light,
+        /* light theme settings */
       ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        /* dark theme settings */
+      ),
+      themeMode: ThemeMode.dark, 
       home: const DevicesListScreen(),
     );
   }
