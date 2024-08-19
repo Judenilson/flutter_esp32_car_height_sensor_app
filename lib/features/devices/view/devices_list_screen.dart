@@ -67,11 +67,11 @@ class _DevicesListScreenState extends State<DevicesListScreen> {
         itemCount: _scanResults.length,
         itemBuilder: (context, index) {
           final result = _scanResults[index];
-          return ListTile(
+          return (result.device.advName != '') ? ListTile(
             title: Text(result.device.advName),
             subtitle: Text(result.device.platformName),
             onTap: () => _openDeviceScreen(context, result),
-          );
+          ) :  null;
         },
         separatorBuilder: (context, index) => Divider(height: 1),
       ),
