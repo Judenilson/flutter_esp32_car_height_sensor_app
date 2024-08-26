@@ -73,10 +73,6 @@ class _ScanResultTileState extends State<ScanResultTile> {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
-          // Text(
-          //   widget.result.device.remoteId.str,
-          //   style: Theme.of(context).textTheme.bodySmall,
-          // )
         ],
       );
     } else {
@@ -96,50 +92,13 @@ class _ScanResultTileState extends State<ScanResultTile> {
     );
   }
 
-  // Widget _buildAdvRow(BuildContext context, String title, String value) {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: <Widget>[
-  //         Text(title, style: Theme.of(context).textTheme.bodySmall),
-  //         const SizedBox(
-  //           width: 12.0,
-  //         ),
-  //         Expanded(
-  //           child: Text(
-  //             value,
-  //             style: Theme.of(context).textTheme.bodySmall?.apply(color: Colors.black),
-  //             softWrap: true,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
-    // var adv = widget.result.advertisementData;
     // apagando dispositivos sem nome
     if (widget.result.device.platformName.isNotEmpty) {
       return ListTile(
         title: _buildTitle(context),
-        // leading: Text(widget.result.rssi.toString()),
         trailing: _buildConnectButton(context),
-        // children: <Widget>[
-        //   if (adv.advName.isNotEmpty) _buildAdvRow(context, 'Nome', adv.advName),
-        //   if (adv.txPowerLevel != null) _buildAdvRow(context, 'Nível de força do Tx', '${adv.txPowerLevel}'),
-        //   if ((adv.appearance ?? 0) > 0) _buildAdvRow(context, 'Aparencia', '0x${adv.appearance!.toRadixString(16)}'),
-        //   if (adv.msd.isNotEmpty) _buildAdvRow(context, 'Data de Fabricação', getNiceManufacturerData(adv.msd)),
-        //   if (adv.serviceUuids.isNotEmpty) _buildAdvRow(context, 'UUIDs', getNiceServiceUuids(adv.serviceUuids)),
-        //   if (adv.serviceData.isNotEmpty) _buildAdvRow(context, 'Dados', getNiceServiceData(adv.serviceData)),
-        // ],
-        // minTileHeight: 80,
-        // tilePadding: EdgeInsets.all(10),
-        // shape: RoundedRectangleBorder(
-        //   borderRadius: BorderRadius.circular(20),
-        // ),
       );
     } else {
       return SizedBox();
