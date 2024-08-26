@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -22,6 +23,7 @@ class _ScanScreenState extends State<ScanScreen> {
   bool _isScanning = false;
   late StreamSubscription<List<ScanResult>> _scanResultsSubscription;
   late StreamSubscription<bool> _isScanningSubscription;
+  final String remoteId = '30:AE:A4:D1:35:56';
 
   @override
   void initState() {
@@ -33,7 +35,8 @@ class _ScanScreenState extends State<ScanScreen> {
         setState(() {});
       }
     }, onError: (e) {
-      Snackbar.show(ABC.b, prettyException("Erro ao buscar:", e), success: false);
+      Snackbar.show(ABC.b, prettyException("Erro ao buscar:", e),
+          success: false);
     });
 
     _isScanningSubscription = FlutterBluePlus.isScanning.listen((state) {
@@ -42,6 +45,13 @@ class _ScanScreenState extends State<ScanScreen> {
         setState(() {});
       }
     });
+
+    // for (int i = 0; i < _scanResults.length; i++ ){
+    //   log(_scanResults[i].device.remoteId.str as num);
+    //   if (_scanResults[i].device.remoteId.str == remoteId){
+    //     autoConnecting();
+    //   }
+    // }
   }
 
   @override
@@ -51,16 +61,28 @@ class _ScanScreenState extends State<ScanScreen> {
     super.dispose();
   }
 
+  Future autoConnecting() async {
+    var device = BluetoothDevice.fromId(remoteId);
+    device.connectAndUpdateStream();
+    MaterialPageRoute route = MaterialPageRoute(
+        builder: (context) => DeviceScreen(device: device),
+        settings: RouteSettings(name: '/DeviceScreen'));
+    Navigator.of(context).push(route);
+  }
+
   Future onScanPressed() async {
     try {
       _systemDevices = await FlutterBluePlus.systemDevices;
     } catch (e) {
-      Snackbar.show(ABC.b, prettyException("Erro de dispositivo do sistema:", e), success: false);
+      Snackbar.show(
+          ABC.b, prettyException("Erro de dispositivo do sistema:", e),
+          success: false);
     }
     try {
       await FlutterBluePlus.startScan(timeout: const Duration(seconds: 15));
     } catch (e) {
-      Snackbar.show(ABC.b, prettyException("Erro ao iniciar busca:", e), success: false);
+      Snackbar.show(ABC.b, prettyException("Erro ao iniciar busca:", e),
+          success: false);
     }
     if (mounted) {
       setState(() {});
@@ -71,16 +93,19 @@ class _ScanScreenState extends State<ScanScreen> {
     try {
       FlutterBluePlus.stopScan();
     } catch (e) {
-      Snackbar.show(ABC.b, prettyException("Erro ao parada de buscar:", e), success: false);
+      Snackbar.show(ABC.b, prettyException("Erro ao parar de buscar:", e),
+          success: false);
     }
   }
 
   void onConnectPressed(BluetoothDevice device) {
     device.connectAndUpdateStream().catchError((e) {
-      Snackbar.show(ABC.c, prettyException("Erro de conexão:", e), success: false);
+      Snackbar.show(ABC.c, prettyException("Erro de conexão:", e),
+          success: false);
     });
     MaterialPageRoute route = MaterialPageRoute(
-        builder: (context) => DeviceScreen(device: device), settings: RouteSettings(name: '/DeviceScreen'));
+        builder: (context) => DeviceScreen(device: device),
+        settings: RouteSettings(name: '/DeviceScreen'));
     Navigator.of(context).push(route);
   }
 
@@ -102,7 +127,10 @@ class _ScanScreenState extends State<ScanScreen> {
         child: const Icon(Icons.stop),
       );
     } else {
-      return FloatingActionButton(onPressed: onScanPressed, child: const Icon(Icons.search),);
+      return FloatingActionButton(
+        onPressed: onScanPressed,
+        child: const Icon(Icons.search),
+      );
     }
   }
 

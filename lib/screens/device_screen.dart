@@ -50,11 +50,10 @@ class _DeviceScreenState extends State<DeviceScreen> {
       if (state == BluetoothConnectionState.connected && _rssi == null) {
         _rssi = await widget.device.readRssi();
       }
+      discoverServices();
       if (mounted) {
         setState(() {});
       }
-
-      discoverServices();
     });
 
     _isConnectingSubscription = widget.device.isConnecting.listen((value) {
@@ -198,12 +197,8 @@ class _DeviceScreenState extends State<DeviceScreen> {
     ]);
   }
 
-  String _dataParser(List<int>? dataFromDevice) {
-    if (dataFromDevice != null) {
-      return utf8.decode(dataFromDevice);
-    } else {
-      return "1,2,3,4";
-    }
+  String _dataParser(dataFromDevice) {
+    return utf8.decode(dataFromDevice);
   }
 
   @override
@@ -221,7 +216,7 @@ class _DeviceScreenState extends State<DeviceScreen> {
               ListTile(
                 contentPadding: EdgeInsets.symmetric(horizontal: 25.0),
                 title: Text(
-                    'O dispositivo está ${(_connectionState.toString().split('.')[1]) == 'connected' ? 'conectado' : 'desconectado'}.'),
+                    'Sensores ${(_connectionState.toString().split('.')[1]) == 'connected' ? 'conectados' : 'desconectado'}!'),
                 trailing: buildRssiTile(context),
               ),
               SizedBox(
@@ -246,7 +241,9 @@ class _DeviceScreenState extends State<DeviceScreen> {
                             if (snapshot.connectionState ==
                                 ConnectionState.active) {
                               // coletando dados via bluetooth
-                              var currentValue = _dataParser(snapshot.data);
+                              String currentValue = snapshot.data != null
+                                  ? _dataParser(snapshot.data)
+                                  : '1,2,3,4';
                               _esp32data = currentValue.split(",");
                               _esp32dataDouble[0] =
                                   double.tryParse(_esp32data[0])! / 10;
